@@ -22,6 +22,8 @@ import requests
 import mediaplayer
 import os
 import os.path
+import yaml
+
 try:
     import RPi.GPIO as GPIO
 except Exception as e:
@@ -45,10 +47,10 @@ USER_PATH = os.path.realpath(os.path.join(__file__, '..', '..','..'))
 
 
 with open('{}/src/config.yaml'.format(ROOT_PATH),'r', encoding='utf8') as conf:
-    configuration = yaml.load(conf)
+    configuration = yaml.load(conf, Loader=yaml.SafeLoader)
 
 with open('{}/src/lang.yaml'.format(ROOT_PATH),'r', encoding='utf8') as lang:
-    langlist = yaml.load(lang)
+    langlist = yaml.load(lang, Loader=yaml.SafeLoader)
 
 TTSChoice=''
 if configuration['TextToSpeech']['Choice']=="Google Cloud":
@@ -91,7 +93,7 @@ elif 'sv' in configuration['Language']['Choice']:
 else:
     keywordfile= '{}/src/keywords_en.yaml'.format(ROOT_PATH)
 with open(keywordfile,'r' , encoding='utf8') as conf:
-    custom_action_keyword = yaml.load(conf)
+    custom_action_keyword = yaml.load(conf, Loader=yaml.SafeLoader)
 
 
 # Get devices list from domoticz server
