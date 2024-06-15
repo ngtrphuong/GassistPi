@@ -16,8 +16,10 @@
 
 from __future__ import print_function
 import faulthandler
+from security import safe_requests
+
 faulthandler.enable()
-from kodijson import Kodi, PLAYER_VIDEO
+from kodijson import Kodi
 try:
     import RPi.GPIO as GPIO
 except Exception as e:
@@ -30,13 +32,10 @@ import pathlib2 as pathlib
 import os
 import subprocess
 import re
-import psutil
 import logging
 import time
 import random
 import snowboydecoder
-import sys
-import signal
 import requests
 import io
 import google.oauth2.credentials
@@ -49,7 +48,6 @@ from google.cloud.speech import enums
 from google.cloud.speech import types
 import paho.mqtt.client as mqtt
 from actions import say
-from actions import trans
 from actions import Action
 from actions import YouTube_No_Autoplay
 from actions import YouTube_Autoplay
@@ -62,8 +60,6 @@ from actions import kodiactions
 from actions import mutevolstatus
 from actions import gmusicselect
 from actions import refreshlists
-from actions import chromecast_play_video
-from actions import chromecast_control
 from actions import kickstarter_tracker
 from actions import getrecipe
 from actions import hue_control
@@ -80,7 +76,6 @@ if GPIO!=None:
 else:
     irreceiver=None
     GPIOcontrol=False
-from pathlib import Path
 from Adafruit_IO import MQTTClient
 from actions import Domoticz_Device_Control
 from actions import domoticz_control
@@ -686,21 +681,21 @@ class Myassistant():
                 mmmcommand=str(usrcmd).lower()
                 if 'weather'.lower() in mmmcommand:
                     if 'show'.lower() in mmmcommand:
-                        mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_2_currentweather")
-                        mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_3_currentweather")
+                        mmreq_one=safe_requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_2_currentweather")
+                        mmreq_two=safe_requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_3_currentweather")
                     if 'hide'.lower() in mmmcommand:
-                        mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_2_currentweather")
-                        mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_3_currentweather")
+                        mmreq_one=safe_requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_2_currentweather")
+                        mmreq_two=safe_requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_3_currentweather")
                 if 'power off'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=SHUTDOWN")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=SHUTDOWN")
                 if 'reboot'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=REBOOT")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=REBOOT")
                 if 'restart'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=RESTART")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=RESTART")
                 if 'display on'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITORON")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=MONITORON")
                 if 'display off'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITOROFF")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=MONITOROFF")
             except requests.exceptions.ConnectionError:
                 say("Magic mirror not online")
         if (custom_action_keyword['Keywords']['Recipe_pushbullet'][0]).lower() in str(usrcmd).lower():

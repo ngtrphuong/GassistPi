@@ -3,12 +3,8 @@
 #This is different from AIY Kit's actions
 #Copying and Pasting AIY Kit's actions commands will not work
 
-from kodijson import Kodi, PLAYER_VIDEO
+from kodijson import Kodi
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from oauth2client.tools import argparser
-from spotipy.oauth2 import SpotifyClientCredentials
-import spotipy.util as util
 import spotipy.oauth2 as oauth2
 from pushbullet import Pushbullet
 from mediaplayer import api
@@ -22,6 +18,8 @@ import requests
 import mediaplayer
 import os
 import os.path
+from security import safe_requests
+
 try:
     import RPi.GPIO as GPIO
 except Exception as e:
@@ -29,15 +27,11 @@ except Exception as e:
         GPIO = None
 import time
 import re
-import subprocess
-import aftership
 import feedparser
 import json
 import urllib.request
-import pafy
 import pychromecast
 import spotipy
-import pprint
 import yaml
 
 ROOT_PATH = os.path.realpath(os.path.join(__file__, '..', '..'))
@@ -98,7 +92,7 @@ with open(keywordfile,'r' , encoding='utf8') as conf:
 if configuration['Domoticz']['Domoticz_Control']=='Enabled':
     Domoticz_Device_Control=True
     try:
-        domoticz_response = requests.get("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=devices&filter=all&order=Name",verify=False)
+        domoticz_response = safe_requests.get("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=devices&filter=all&order=Name",verify=False)
         domoticz_devices=json.loads(domoticz_response.text)
         with open('{}/domoticz_device_list.json'.format(USER_PATH), 'w') as devlist:
             json.dump(domoticz_devices, devlist)
@@ -496,7 +490,7 @@ recivernum=configuration['Clickatell']['Reciever']
 clickatell_api=configuration['Clickatell']['Clickatell_API']
 
 def sendClickatell(number, message):
-    response=requests.get('https://platform.clickatell.com/messages/http/send?apiKey=' + clickatell_api + '&to=' + number + '&content=' + message)
+    response=safe_requests.get('https://platform.clickatell.com/messages/http/send?apiKey=' + clickatell_api + '&to=' + number + '&content=' + message)
     if response.status_code == 202:
         say("SMS message sent")
     else:
@@ -1645,7 +1639,7 @@ def deezer_playlist_select(phrase):
     playlistnumreq=re.findall(r'\b\d+\b', track)
     if playlistnumreq !=[]:
         playlistnumreq=playlistnumreq[0]
-    deezer_response = requests.get("https://api.deezer.com/user/" + configuration['Deezer']['User_id'] + "/playlists",verify=False)
+    deezer_response = safe_requests.get("https://api.deezer.com/user/" + configuration['Deezer']['User_id'] + "/playlists",verify=False)
     deezer_user_playlist_info=json.loads(deezer_response.text)
     if deezer_user_playlist_info['data'] != []:
         for i in range(0,len(deezer_user_playlist_info['data'])):
@@ -1659,7 +1653,7 @@ def deezer_playlist_select(phrase):
         tracklisturl=deezer_user_playlists[(int(playlistnumreq)-1)]
     else:
         say("No matching playlists found")
-    deezer_tracks_response = requests.get(tracklisturl,verify=False)
+    deezer_tracks_response = safe_requests.get(tracklisturl,verify=False)
     deezer_user_playlist_tracks_info=json.loads(deezer_tracks_response.text)
     numsongs=len(deezer_user_playlist_tracks_info['data'])
     if not numsongs==[]:
