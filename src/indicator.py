@@ -25,7 +25,7 @@ USER_PATH = os.path.realpath(os.path.join(__file__, '..', '..','..'))
 
 if os.path.isfile("{}/audiosetup".format(USER_PATH)):
     with open('{}/audiosetup'.format(USER_PATH)) as f:
-        detected_audio_setup = f.readline().rstrip()
+        detected_audio_setup = f.readline(5_000_000).rstrip()
         print(detected_audio_setup)
         if (detected_audio_setup=='AIY-HAT' or detected_audio_setup=='CUSTOM-VOICE-HAT'):
             audiosetup='AIY'
