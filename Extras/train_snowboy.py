@@ -164,7 +164,7 @@ def train_snowboy_model():
             {"wave": get_wave('/tmp/3.wav')}
         ]
     }
-    response = requests.post(endpoint, json=data)
+    response = requests.post(endpoint, json=data, timeout=60)
     if response.ok:
         with open(modelfilename, "w") as outfile:
             outfile.write(response.content)

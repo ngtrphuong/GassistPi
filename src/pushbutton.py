@@ -158,13 +158,13 @@ DEFAULT_GRPC_DEADLINE = 60 * 3 + 5
 def tasmota_control(phrase,devname,devip):
     if custom_action_keyword['Dict']['On'] in phrase:
         try:
-            rq=requests.head("http://"+devip+"/cm?cmnd=Power%20on")
+            rq=requests.head("http://"+devip+"/cm?cmnd=Power%20on", timeout=60)
             say("Tunring on "+devname)
         except requests.exceptions.ConnectionError:
             say("Device not online")
     elif custom_action_keyword['Dict']['Off'] in phrase:
         try:
-            rq=requests.head("http://"+devip+"/cm?cmnd=Power%20off")
+            rq=requests.head("http://"+devip+"/cm?cmnd=Power%20off", timeout=60)
             say("Tunring off "+devname)
         except requests.exceptions.ConnectionError:
             say("Device not online")
@@ -375,21 +375,21 @@ class SampleAssistant(object):
                             mmmcommand=str(usrcmd).lower()
                             if 'weather'.lower() in mmmcommand:
                                 if 'show'.lower() in mmmcommand:
-                                    mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_2_currentweather")
-                                    mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_3_currentweather")
+                                    mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_2_currentweather", timeout=60)
+                                    mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_3_currentweather", timeout=60)
                                 if 'hide'.lower() in mmmcommand:
-                                    mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_2_currentweather")
-                                    mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_3_currentweather")
+                                    mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_2_currentweather", timeout=60)
+                                    mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_3_currentweather", timeout=60)
                             if 'power off'.lower() in mmmcommand:
-                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=SHUTDOWN")
+                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=SHUTDOWN", timeout=60)
                             if 'reboot'.lower() in mmmcommand:
-                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=REBOOT")
+                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=REBOOT", timeout=60)
                             if 'restart'.lower() in mmmcommand:
-                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=RESTART")
+                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=RESTART", timeout=60)
                             if 'display on'.lower() in mmmcommand:
-                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITORON")
+                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITORON", timeout=60)
                             if 'display off'.lower() in mmmcommand:
-                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITOROFF")
+                                mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITOROFF", timeout=60)
                         except requests.exceptions.ConnectionError:
                             say("Magic mirror not online")
                         return continue_conversation
