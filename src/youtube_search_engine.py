@@ -4,8 +4,8 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from oauth2client.tools import argparser
 import yaml
-import random
 import os
+import secrets
 
 ROOT_PATH = os.path.realpath(os.path.join(__file__, '..', '..'))
 
@@ -81,7 +81,7 @@ def youtube_search(query, maximum=1):
             part='contentDetails'
         ).execute()
         if maximum == 1:
-            list_result = random.choice(list_response.get('items', []))
+            list_result = secrets.choice(list_response.get('items', []))
             return list_result['contentDetails']['videoId']
         else:
             ids = []
@@ -97,7 +97,7 @@ def youtube_search(query, maximum=1):
             part='contentDetails'
         ).execute()
         if maximum == 1:
-            list_result = random.choice(list_response.get('items', []))
+            list_result = secrets.choice(list_response.get('items', []))
             return list_result['contentDetails']['videoId']
         else:
             ids = []
