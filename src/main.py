@@ -16,6 +16,8 @@
 
 from __future__ import print_function
 import faulthandler
+import secrets
+
 faulthandler.enable()
 from kodijson import Kodi, PLAYER_VIDEO
 try:
@@ -33,7 +35,6 @@ import re
 import psutil
 import logging
 import time
-import random
 import snowboydecoder
 import sys
 import signal
@@ -664,7 +665,7 @@ class Myassistant():
                 try:
                     if str(configuration['Conversation']['question'][i][0]).lower() in str(usrcmd).lower():
                         self.assistant.stop_conversation()
-                        selectedans=random.sample(configuration['Conversation']['answer'][i],1)
+                        selectedans=secrets.SystemRandom().sample(configuration['Conversation']['answer'][i],1)
                         say(selectedans[0])
                         break
                 except Keyerror:
