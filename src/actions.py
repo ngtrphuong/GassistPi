@@ -98,7 +98,7 @@ with open(keywordfile,'r' , encoding='utf8') as conf:
 if configuration['Domoticz']['Domoticz_Control']=='Enabled':
     Domoticz_Device_Control=True
     try:
-        domoticz_response = requests.get("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=devices&filter=all&order=Name",verify=False)
+        domoticz_response = requests.get("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=devices&filter=all&order=Name",verify=True)
         domoticz_devices=json.loads(domoticz_response.text)
         with open('{}/domoticz_device_list.json'.format(USER_PATH), 'w') as devlist:
             json.dump(domoticz_devices, devlist)
@@ -1526,13 +1526,13 @@ def domoticz_control(query,index,devicename):
                 break
 
         if (' ' + custom_action_keyword['Dict']['On'] + ' ') in query or (' ' + custom_action_keyword['Dict']['On']) in query or (custom_action_keyword['Dict']['On'] + ' ') in query:
-            devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=On",verify=False)
+            devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=On",verify=True)
             say('Turning on ' + devicename )
         if custom_action_keyword['Dict']['Off'] in query:
-            devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=Off",verify=False)
+            devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=Off",verify=True)
             say('Turning off ' + devicename )
         if 'toggle' in query:
-            devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=Toggle",verify=False)
+            devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=Toggle",verify=True)
             say('Toggling ' + devicename )
         if custom_action_keyword['Dict']['Colour'] in query:
             if 'RGB' in domoticz_devices['result'][devorder]['SubType']:
@@ -1542,7 +1542,7 @@ def domoticz_control(query,index,devicename):
                 print(hexcolour)
                 if bright=='':
                     bright=str(domoticz_devices['result'][devorder]['Level'])
-                devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=setcolbrightnessvalue&idx=" + index + "&hex=" + hexcolour + "&brightness=" + bright + "&iswhite=false",verify=False)
+                devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=setcolbrightnessvalue&idx=" + index + "&hex=" + hexcolour + "&brightness=" + bright + "&iswhite=false",verify=True)
                 say('Setting ' + devicename + ' to ' + colour )
             else:
                 say('The requested light is not a colour bulb')
@@ -1555,7 +1555,7 @@ def domoticz_control(query,index,devicename):
                 else:
                     bright=re.findall('\d+', query)
                     bright=bright[0]
-                devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=Set%20Level&level=" + bright ,verify=False)
+                devreq=requests.head("https://" + configuration['Domoticz']['Server_IP'][0] + ":" + configuration['Domoticz']['Server_port'][0] + "/json.htm?type=command&param=switchlight&idx=" + index + "&switchcmd=Set%20Level&level=" + bright ,verify=True)
                 say('Setting ' + devicename + ' brightness to ' + str(bright) + ' percent.')
             else:
                 say('The requested light does not have a dimer')
@@ -1645,7 +1645,7 @@ def deezer_playlist_select(phrase):
     playlistnumreq=re.findall(r'\b\d+\b', track)
     if playlistnumreq !=[]:
         playlistnumreq=playlistnumreq[0]
-    deezer_response = requests.get("https://api.deezer.com/user/" + configuration['Deezer']['User_id'] + "/playlists",verify=False)
+    deezer_response = requests.get("https://api.deezer.com/user/" + configuration['Deezer']['User_id'] + "/playlists",verify=True)
     deezer_user_playlist_info=json.loads(deezer_response.text)
     if deezer_user_playlist_info['data'] != []:
         for i in range(0,len(deezer_user_playlist_info['data'])):
@@ -1659,7 +1659,7 @@ def deezer_playlist_select(phrase):
         tracklisturl=deezer_user_playlists[(int(playlistnumreq)-1)]
     else:
         say("No matching playlists found")
-    deezer_tracks_response = requests.get(tracklisturl,verify=False)
+    deezer_tracks_response = requests.get(tracklisturl,verify=True)
     deezer_user_playlist_tracks_info=json.loads(deezer_tracks_response.text)
     numsongs=len(deezer_user_playlist_tracks_info['data'])
     if not numsongs==[]:
