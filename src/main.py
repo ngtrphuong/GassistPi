@@ -16,6 +16,8 @@
 
 from __future__ import print_function
 import faulthandler
+from security import safe_requests
+
 faulthandler.enable()
 from kodijson import Kodi, PLAYER_VIDEO
 try:
@@ -686,21 +688,21 @@ class Myassistant():
                 mmmcommand=str(usrcmd).lower()
                 if 'weather'.lower() in mmmcommand:
                     if 'show'.lower() in mmmcommand:
-                        mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_2_currentweather")
-                        mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_3_currentweather")
+                        mmreq_one=safe_requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_2_currentweather")
+                        mmreq_two=safe_requests.get("http://"+mmmip+":8080/remote?action=SHOW&module=module_3_currentweather")
                     if 'hide'.lower() in mmmcommand:
-                        mmreq_one=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_2_currentweather")
-                        mmreq_two=requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_3_currentweather")
+                        mmreq_one=safe_requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_2_currentweather")
+                        mmreq_two=safe_requests.get("http://"+mmmip+":8080/remote?action=HIDE&module=module_3_currentweather")
                 if 'power off'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=SHUTDOWN")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=SHUTDOWN")
                 if 'reboot'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=REBOOT")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=REBOOT")
                 if 'restart'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=RESTART")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=RESTART")
                 if 'display on'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITORON")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=MONITORON")
                 if 'display off'.lower() in mmmcommand:
-                    mmreq=requests.get("http://"+mmmip+":8080/remote?action=MONITOROFF")
+                    mmreq=safe_requests.get("http://"+mmmip+":8080/remote?action=MONITOROFF")
             except requests.exceptions.ConnectionError:
                 say("Magic mirror not online")
         if (custom_action_keyword['Keywords']['Recipe_pushbullet'][0]).lower() in str(usrcmd).lower():
