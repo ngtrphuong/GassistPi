@@ -25,6 +25,8 @@ import pathlib2 as pathlib
 import sys
 import time
 import uuid
+import secrets
+
 try:
     import RPi.GPIO as GPIO
 except Exception as e:
@@ -38,7 +40,6 @@ import psutil
 import logging
 import re
 import requests
-import random
 from actions import say
 import google.auth.transport.grpc
 import google.auth.transport.requests
@@ -358,7 +359,7 @@ class SampleAssistant(object):
                         for i in range(1,numques+1):
                             try:
                                 if str(configuration['Conversation']['question'][i][0]).lower() in str(usrcmd).lower():
-                                    selectedans=random.sample(configuration['Conversation']['answer'][i],1)
+                                    selectedans=secrets.SystemRandom().sample(configuration['Conversation']['answer'][i],1)
                                     say(selectedans[0])
                                     return continue_conversation
                                     break
